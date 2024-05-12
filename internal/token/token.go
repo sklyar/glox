@@ -3,72 +3,76 @@ package token
 type Type uint8
 
 const (
+	// Special tokens.
+	EOF Type = iota
+	ILLEGAL
+
 	// Single-character tokens.
-	TypeLeftParen Type = iota + 1
-	TypeRightParen
-	TypeLeftBrace
-	TypeRightBrace
-	TypeComma
-	TypeDot
-	TypeMinus
-	TypePlus
-	TypeSemicolon
-	TypeSlash
-	TypeStar
+	LPAREN    // (
+	RPAREN    // )
+	LBRACE    // {
+	RBRACE    // }
+	COMMA     // ,
+	DOT       // .
+	SEMICOLON // ;
+
+	ADD // +
+	SUB // -
+	MUL // *
+	QUO // /
 
 	// One or two character tokens.
-	TypeBang
-	TypeBangEqual
-	TypeEqual
-	TypeEqualEqual
-	TypeGreater
-	TypeGreaterEqual
-	TypeLess
-	TypeLessEqual
+	EQL    // ==
+	LSS    // <
+	GTR    // >
+	ASSIGN // =
+	NOT    // !
+
+	NEQ // !=
+	LEQ // <=
+	GEQ // >=
 
 	// Literals.
-	TypeIdentifier
-	TypeString
-	TypeNumber
+	IDENT  // identifier
+	STRING // "string"
+	NUMBER // 1234 or 1234.567
 
 	// Keywords.
-	TypeAnd
-	TypeClass
-	TypeElse
-	TypeFalse
-	TypeTrue
-	TypeFunc
-	TypeFor
-	TypeIf
-	TypeNil
-	TypeOr
-	TypePrint
-	TypeReturn
-	TypeSuper
-	TypeThis
-	TypeVar
-	TypeWhile
-
-	TypeEOF
+	AND
+	CLASS
+	ELSE
+	FALSE
+	TRUE
+	FUNC
+	FOR
+	IF
+	NIL
+	OR
+	PRINT
+	RETURN
+	SUPER
+	THIS
+	VAR
+	WHILE
 )
 
 var keywords = map[string]Type{
-	"and":    TypeAnd,
-	"class":  TypeClass,
-	"else":   TypeElse,
-	"false":  TypeFalse,
-	"for":    TypeFor,
-	"func":   TypeFunc,
-	"if":     TypeIf,
-	"nil":    TypeNil,
-	"or":     TypeOr,
-	"print":  TypePrint,
-	"return": TypeReturn,
-	"super":  TypeSuper,
-	"this":   TypeThis,
-	"true":   TypeTrue,
-	"var":    TypeVar,
-	"while":  TypeWhile,
+	"and":    AND,
+	"class":  CLASS,
+	"else":   ELSE,
+	"false":  FALSE,
+	"for":    FOR,
+	"func":   FUNC,
+	"if":     IF,
+	"nil":    NIL,
+	"or":     OR,
+	"print":  PRINT,
+	"return": RETURN,
+	"super":  SUPER,
+	"this":   THIS,
+	"true":   TRUE,
+	"var":    VAR,
+	"while":  WHILE,
 }
 
 type Token struct {
@@ -87,7 +91,7 @@ func NewToken(tokenType Type, lexeme string, literal any, line int) Token {
 	}
 }
 
-func Lookup(ident string) (Type, bool) {
+func LookupIdent(ident string) (Type, bool) {
 	t, ok := keywords[ident]
 	return t, ok
 }

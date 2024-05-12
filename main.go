@@ -8,6 +8,7 @@ import (
 	"io"
 	"log/slog"
 	"os"
+	"strconv"
 )
 
 type Lox struct {
@@ -53,25 +54,19 @@ func (l *Lox) report(line int, where, message string) {
 }
 
 func (l *Lox) run(source []byte) {
-	s := scanner.NewScanner(source)
+	errHandler := func(offset, line int, msg string) {
+		l.report(line, strconv.Itoa(offset), msg)
+	}
+
+	s := scanner.NewScanner(source, errHandler)
 	tokens, err := s.ScanTokens()
 	if err != nil {
-		var generalError *scanner.GeneralError
-		if errors.As(err, &generalError) {
-			l.Error(generalError.Line, generalError.Error())
-			return
-		}
-		var unexpectedCharacterError *scanner.UnexpectedCharacterError
-		if errors.As(err, &unexpectedCharacterError) {
-			l.report(unexpectedCharacterError.Line, "", unexpectedCharacterError.Error())
-			return
-		}
+		l.logger.Error("scan tokens", err.Error())
 		return
 	}
 	for _, token := range tokens {
 		fmt.Println(token)
 	}
-
 }
 
 func main() {
